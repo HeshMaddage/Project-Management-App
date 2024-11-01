@@ -3,15 +3,24 @@ import { Link } from "@inertiajs/react";
 export default function Pagination({ links }) {
   return (
     <nav className="text-center mt-4">
-      {links.map((link, index) => (
+      {links.map((link) => (
         <Link
-          key={index} // Unique key for each Link
-          href={link.url} // URL for pagination link
-          className={link.active ? 'text-blue-500 font-bold' : 'text-gray-500'} // Styling for active links
-          dangerouslySetInnerHTML={{ __html: link.label }} // Render HTML entities in label
-        />
+          preserveScroll//when change the page the scroll position doesnot change
+          href={link.url || ""}
+          key={link.label}
+          className={
+            "inline-block py-2 px-3 rounded-lg text-gray-200 text-xs "
+            + (link.active ? "bg-gray-950" : " ") +
+            (!link.url
+              ? "!text-gray-500 cursor-not-allowed"
+              : "hover:bg-gray-950"
+            )
+          }
+          dangerouslySetInnerHTML={{ __html: link.label }}
+        ></Link>
       ))}
     </nav>
+
   );
 }
 
