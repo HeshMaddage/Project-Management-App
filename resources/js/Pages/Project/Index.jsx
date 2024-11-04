@@ -4,10 +4,14 @@ import TextInput from "@/Components/TextInput";
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/16/solid'
+import TableHeading from "@/Components/TableHeading";
+
+
+
 
 
 export default function Index({ auth, projects, queryParams = null }) {
+
   queryParams = queryParams || {}
 
   const searchFieldChanged = (name, value) => {
@@ -40,12 +44,23 @@ export default function Index({ auth, projects, queryParams = null }) {
   }
 
   return (
-    <AuthenticatedLayout>
+    <AuthenticatedLayout
+      user={auth.user}
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-          Projects
-        </h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold leading-tight
+           text-gray-800 dark:text-gray-200">
+            Projects
+          </h2>
+          <Link href={route("project.create")} className="bg-emerald-500 py-1 px-3
+           text-white
+           rounded shadow transition-all hover:bg-emarald-600">
+            Add New
+          </Link></div>
       }
+    >
+
+
 
       <Head title="projects" />
 
@@ -62,57 +77,42 @@ export default function Index({ auth, projects, queryParams = null }) {
                 border-b-2 border-gray-500">
 
                     <tr className="text-nowrap">
-                      <th
-                        onClick={(e) => sortchanged("id")}
-                        className="px-3 py-3 flex items-center justify-between gap-1 ">
-                        ID
-                        <div>
-                          <ChevronUpIcon className="w-4" />
-                          <ChevronDownIcon className="w-4 -mt-2" />
-                        </div>
-
-                      </th>
+                      <TableHeading
+                        name="id"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortchanged={sortchanged}
+                      >ID
+                      </TableHeading>
                       <th className="px-3 py-3">Image</th>
-                      <th
-                        onClick={(e) => sortchanged("name")}
-                        className="px-3 py-3 flex items-center justify-between gap-1 ">
-                        Name
-                        <div>
-                          <ChevronUpIcon className="w-4" />
-                          <ChevronDownIcon className="w-4 -mt-2" />
-                        </div>
-                      </th>
-                      <th
-                        onClick={(e) => sortchanged("status")}
-                      >
-                        <div className="px-3 py-3 flex items-center justify-between gap-1 ">
-                          Status
-
-                          <div>
-                            <ChevronUpIcon className="w-4" />
-                            <ChevronDownIcon className="w-4 -mt-2" />
-                          </div>
-                        </div>
-
-                      </th>
-                      <th
-                        onClick={(e) => sortchanged("created_at")}
-                        className="px-3 py-3">
-                        Create Date
-                        <div>
-                          <ChevronUpIcon className="w-4" />
-                          <ChevronDownIcon className="w-4 -mt-2" />
-                        </div>
-                      </th>
-                      <th
-                        onClick={(e) => sortchanged("due_date")}
-                        className="px-3 py-3">
-                        Due date
-                        <div>
-                          <ChevronUpIcon className="w-4" />
-                          <ChevronDownIcon className="w-4 -mt-2" />
-                        </div>
-                      </th>
+                      <TableHeading
+                        name="name"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortchanged={sortchanged}
+                      >Name
+                      </TableHeading>
+                      <TableHeading
+                        name="status"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortchanged={sortchanged}
+                      >Status
+                      </TableHeading>
+                      <TableHeading
+                        name="created_at"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortchanged={sortchanged}
+                      >Create Date
+                      </TableHeading>
+                      <TableHeading
+                        name="due_date"
+                        sort_field={queryParams.sort_field}
+                        sort_direction={queryParams.sort_direction}
+                        sortchanged={sortchanged}
+                      >Due date
+                      </TableHeading>
                       <th className="px-3 py-3">Created By</th>
                       <th className="px-3 py-3 text-right">Actions</th>
 
@@ -163,7 +163,14 @@ export default function Index({ auth, projects, queryParams = null }) {
                         <td className="px-3 py-2">
                           <img src={project.image_path} alt="" className="w-12 h-12" />
                         </td>
-                        <td className="px-3 py-2">{project.name}</td>
+                        <th className="px-3 py-2 text-white hover:underline">
+                          <th className="px-3 py-2 text-white hover:underline">
+                            <Link href={route("project.show", { id: project.id })}>
+                              {project.name}
+                            </Link>
+                          </th>
+
+                        </th>
                         <td className="px-3 py-2">
                           <span className={
                             "px-2 py-1 rounded text-white " +
@@ -200,3 +207,4 @@ export default function Index({ auth, projects, queryParams = null }) {
     </AuthenticatedLayout >
   )
 }
+

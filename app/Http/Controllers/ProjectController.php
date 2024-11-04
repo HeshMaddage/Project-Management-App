@@ -6,6 +6,7 @@ use App\Models\project;
 use App\Http\Requests\StoreprojectRequest;
 use App\Http\Requests\UpdateprojectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TaskResource;
 
 class ProjectController extends Controller
 {
@@ -50,7 +51,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Project/Create");
     }
 
     /**
@@ -58,7 +59,8 @@ class ProjectController extends Controller
      */
     public function store(StoreprojectRequest $request)
     {
-        //
+        $data = $request->validated();
+        dd($data);
     }
 
     /**
@@ -66,7 +68,26 @@ class ProjectController extends Controller
      */
     public function show(project $project)
     {
-        //
+        $query = $project->tasks();
+
+        $sortField = request("sort_field", 'created_at');
+        $sortDirection = request("sort_direction", "desc");
+
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
+        }
+
+        if (request("status")) {
+            $query->where("status", request("status"));
+        }
+
+        $tasks = $query->orderBy($sortField, $sortDirection)->paginate(10);
+        return inertia('Project/Show', [
+            'project' => new ProjectResource($project),
+            "tasks" => TaskResource::collection($tasks),
+            "queryParams" => request()->query() ?: null,
+
+        ]);
     }
 
     /**
